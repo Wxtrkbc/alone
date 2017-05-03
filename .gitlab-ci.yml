@@ -1,0 +1,10 @@
+stages:
+  - test
+  - deploy
+
+test_job:
+  stage: test
+  script:
+    - echo "just test"
+  tags:
+    - alone_test

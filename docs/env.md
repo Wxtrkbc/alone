@@ -7,6 +7,9 @@
    ```
    docker pull sameersbn/gitlab:latest
 
+   wget https://raw.githubusercontent.com/sameersbn/docker-gitlab/master/docker-compose.yml
+
+   docker-compose up
 
    ```
 
@@ -17,8 +20,8 @@
    ```
    docker run -d --name gitlab-runner --restart always \
    -v /var/run/docker.sock:/var/run/docker.sock \
+   -v /Users/ahprosim/tmp:/etc/gitlab-runner \
    gitlab/gitlab-runner:latest
-
    ```
 
    ​
