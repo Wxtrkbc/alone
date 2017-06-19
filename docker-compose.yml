@@ -1,9 +1,38 @@
-version: '2'
+version: '3'
+
 services:
   web:
     build: .
-    command: python manage.py runserver 127.0.0.1:8000
-    volumes:
-      - .:/alone
+    command: sh run.sh
+#    deploy:
+#      replicas:2
+#      resources:
+#        cpus: "0.1"
+#        memory: 50M
+#        restart_policy:
+#          condition: on-failure
     ports:
-      - "8000:8000"
+      - "9000"
+    env_file:
+     - ./env/web.env
+
+
+#  mysql:
+#    restart: always
+#    image: mysql:latest
+#    user: "1000:50"
+#    ports:
+#      - "3306:3306"
+#    env_file:
+#     - ./env/mysql.env
+#    volumes:
+#      - /Users/ahprosim/Desktop/data:/data/
+
+
+  redis:
+    restart: always
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - /Users/ahprosim/Desktop/storage/redis-1:/data

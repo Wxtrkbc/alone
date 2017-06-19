@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-cd "$(dirname "$0")"
-
-if [ $TEST = "True" ]
-then
-  python manage.py test
-else
-  /usr/local/bin/supervisord --nodaemon
-fi
+#cd "$(dirname "$0")"
+python3 manage.py makemigrations app
+python3 manage.py migrate app
+/usr/bin/supervisord --nodaemon

@@ -1,3 +1,1 @@
-Django==1.11
-pytz==2017.2
-wheel==0.24.0
+-r requirements/prod.txt

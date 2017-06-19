@@ -1,4 +1,4 @@
-"""Alone URL Configuration
+"""alone URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -15,10 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from app.utils.web import ping
 
+from alone.utils.web import ping
+from alone.app.views_test import test_mysql
+from alone.app.views_test import test_redis
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^ping/?$', ping())
+    url(r'^ping/?$', ping()),
+    url(r'^ping_mysql/?$', test_mysql),
+    url(r'^ping_redis/?$', test_redis),
 ]
