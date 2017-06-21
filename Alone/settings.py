@@ -133,3 +133,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+API_VERSION = 'v1'
+
+AUTH_USER_MODEL = 'app.User'

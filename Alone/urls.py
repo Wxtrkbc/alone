@@ -13,16 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
+from django.conf import settings
 
 from alone.utils.web import ping
-from alone.app.views_test import test_mysql
-from alone.app.views_test import test_redis
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^ping/?$', ping()),
-    url(r'^ping_mysql/?$', test_mysql),
-    url(r'^ping_redis/?$', test_redis),
+    url(r'^' + settings.API_VERSION + '/', include('alone.router')),
 ]
