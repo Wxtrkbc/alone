@@ -4,3 +4,4 @@ redis==2.10.5
 jsonfield==1.0.3
 djangorestframework==3.4.0
 django-filter==1.0.1
+raven==6.1.0

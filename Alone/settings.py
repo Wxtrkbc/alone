@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import raven
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -36,7 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'alone.app',
+
+    # Third packages
     'rest_framework_docs',
+    'raven.contrib.django.raven_compat',
+
 ]
 
 MIDDLEWARE = [
@@ -137,4 +143,11 @@ STATIC_URL = '/static/'
 
 API_VERSION = 'v1'
 
-AUTH_USER_MODEL = 'app.User'
+AUTH_USER_MODEL = 'alone.app.User'
+
+RAVEN_CONFIG = {
+    'dsn': 'http://61bd9e6b02d143629f25402dc1a19b65:2349b2f8856f4cd4b0b71fad4173e540@localhost:9000/2',
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+}
