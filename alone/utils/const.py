@@ -1,5 +1,6 @@
 # coding=utf-8
 
+# model file choice
 SEX_MALE = "MALE"
 SEX_FEMALE = 'FEMALE'
 SEX_UNDEFINED = "UNDEFINED"

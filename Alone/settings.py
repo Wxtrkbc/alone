@@ -145,6 +145,10 @@ API_VERSION = 'v1'
 
 AUTH_USER_MODEL = 'app.User'
 
+AUTHENTICATION_BACKENDS = [
+    'alone.user.auth.AloneBackend'
+]
+
 RAVEN_CONFIG = {
     'dsn': 'http://61bd9e6b02d143629f25402dc1a19b65:2349b2f8856f4cd4b0b71fad4173e540@localhost:9000/2',
     # If you are using git, you can also automatically configure the
