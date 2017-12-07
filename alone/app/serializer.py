@@ -1,6 +1,9 @@
 
+import phonenumbers
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from validate_email import validate_email
+
 
 from alone.utils.func import check_body_keys
 
@@ -32,9 +35,30 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         exclude = ('is_admin', 'followed')
 
+    def validate_phone(self, value):
+        try:
+            res = phonenumbers.parse(value)
+            if not phonenumbers.is_valid_number(res):
+                raise serializers.ValidationError("Phone number seems not valid")
+        except Exception as e:
+            raise serializers.ValidationError("Phone number seems not valid")
+        return value
+
+    def validate_email(self, value):
+        if not validate_email(value):
+            raise serializers.ValidationError("Email seems not valid")
+        return value
+
     def create(self, validated_data):
         # check_body_keys(validated_data, ['name', 'password'])
         name = validated_data.pop('name')
         password = validated_data.pop('password')
         return User.objects.create_user(username=name, password=password, **validated_data)
+
+    def update(self, instance, validated_data):
+        for key in ['location', 'avatar', 'location', 'sex', 'brief', 'email', 'phone']:
+            if key in validated_data:
+                setattr(instance, key, validated_data[key])
+        instance.save()
+        return instance
 
