@@ -6,8 +6,8 @@ import jsonfield
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser
 
-from alone.utils import const
-from alone.app.manager import AloneUserManager
+from ins.utils import const
+from ins.app.manager import AloneUserManager
 
 
 class Time(models.Model):

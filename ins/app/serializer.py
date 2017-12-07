@@ -4,9 +4,6 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from validate_email import validate_email
 
-
-from alone.utils.func import check_body_keys
-
 User = get_user_model()
 
 

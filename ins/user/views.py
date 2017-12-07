@@ -7,11 +7,11 @@ from rest_framework import status, filters
 from rest_framework.decorators import list_route
 from rest_framework.pagination import PageNumberPagination
 
-
-from alone.app.serializer import UserSerializer
-from alone.utils.func import check_body_keys
-from alone.utils.response import error_response, empty_response
-from alone.app.filter import UserFilter
+from ins.app.serializer import UserSerializer
+from ins.utils.func import check_body_keys
+from ins.utils.response import error_response, empty_response
+from ins.app.filter import UserFilter
+from ins.app.permission import IsOwnerOrIsAdmin
 
 User = get_user_model()
 
@@ -43,6 +43,9 @@ class UserViewSet(viewsets.ModelViewSet):
     search_fields = ('name', 'email')
     ordering_fields = ('created_at', 'level', 'updated_at')
 
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
     @list_route(methods=['post'])
     def login(self, request):
         data = request.data
@@ -59,5 +62,13 @@ class UserViewSet(viewsets.ModelViewSet):
         logout(request)
         return empty_response()
 
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
+    @list_route(methods=['put'], permission_classes=[IsOwnerOrIsAdmin])
+    def reset_password(self, request):
+        data = request.data
+        user = request.user
+        check_body_keys(data, ['old_password', 'new_password'])
+        if user.check_password(data['old_password']):
+            user.set_password(data['new_password'])
+            user.save()
+            return empty_response()
+        return error_response(message='Wrong password!')
