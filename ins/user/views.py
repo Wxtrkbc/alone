@@ -2,16 +2,18 @@
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework import status, filters
 from rest_framework.decorators import list_route
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.authentication import BasicAuthentication
 
 from ins.app.serializer import UserSerializer
+from ins.app.filter import UserFilter
 from ins.utils.func import check_body_keys
 from ins.utils.response import error_response, empty_response
-from ins.app.filter import UserFilter
-from rest_framework.permissions import IsAuthenticated
+
 
 User = get_user_model()
 
@@ -46,7 +48,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
-    @list_route(methods=['post'])
+    @list_route(methods=['post'], authentication_classes=[BasicAuthentication])
     def login(self, request):
         data = request.data
         check_body_keys(data, ['name', 'password'])
@@ -62,8 +64,8 @@ class UserViewSet(viewsets.ModelViewSet):
         logout(request)
         return empty_response()
 
-    @list_route(methods=['put'], permission_classes=[IsAuthenticated])
-    def reset_password(self, request):
+    @list_route(methods=['put'], url_path='change-password')
+    def change_password(self, request):
         data = request.data
         user = request.user
         check_body_keys(data, ['old_password', 'new_password'])
@@ -72,3 +74,21 @@ class UserViewSet(viewsets.ModelViewSet):
             user.save()
             return empty_response()
         return error_response(message='Wrong password!')
+
+    @list_route(methods=['put'])
+    def follow(self, request):
+        user = request.user
+        data = request.data
+        check_body_keys(data, ['uuid'])
+        target_user = get_object_or_404(User, uuid=data['uuid'])
+        User.objects.follow_user(user, target_user)
+        return empty_response()
+
+    @list_route(methods=['put'])
+    def unfollow(self, request):
+        user = request.user
+        data = request.data
+        check_body_keys(data, ['uuid'])
+        target_user = get_object_or_404(User, uuid=data['uuid'])
+        User.objects.unfollow_user(user, target_user)
+        return empty_response()

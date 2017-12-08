@@ -25,3 +25,11 @@ class AloneUserManager(BaseUserManager):
     @classmethod
     def normalize_username(cls, username):
         return unicodedata.normalize('NFKC', force_text(username))
+
+    @staticmethod
+    def follow_user(user, target_user):
+        user.followed.add(target_user)
+
+    @staticmethod
+    def unfollow_user(user, target_user):
+        user.followed.remove(target_user)

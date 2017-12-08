@@ -149,12 +149,12 @@ AUTHENTICATION_BACKENDS = [
     'ins.user.auth.AloneBackend'
 ]
 
-RAVEN_CONFIG = {
-    'dsn': 'http://61bd9e6b02d143629f25402dc1a19b65:2349b2f8856f4cd4b0b71fad4173e540@localhost:9000/2',
-    # If you are using git, you can also automatically configure the
-    # release based on the git info.
-    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
-}
+# RAVEN_CONFIG = {
+#     'dsn': 'http://61bd9e6b02d143629f25402dc1a19b65:2349b2f8856f4cd4b0b71fad4173e540@localhost:9000/2',
+#     # If you are using git, you can also automatically configure the
+#     # release based on the git info.
+#     'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

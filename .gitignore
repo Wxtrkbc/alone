@@ -2,6 +2,7 @@
 *.pyc
 *.sqlite3
 env/
+migrations/
 
 # MAC OSX
 .DS_Store
