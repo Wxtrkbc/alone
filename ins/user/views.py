@@ -11,7 +11,7 @@ from ins.app.serializer import UserSerializer
 from ins.utils.func import check_body_keys
 from ins.utils.response import error_response, empty_response
 from ins.app.filter import UserFilter
-from ins.app.permission import IsOwnerOrIsAdmin
+from rest_framework.permissions import IsAuthenticated
 
 User = get_user_model()
 
@@ -62,7 +62,7 @@ class UserViewSet(viewsets.ModelViewSet):
         logout(request)
         return empty_response()
 
-    @list_route(methods=['put'], permission_classes=[IsOwnerOrIsAdmin])
+    @list_route(methods=['put'], permission_classes=[IsAuthenticated])
     def reset_password(self, request):
         data = request.data
         user = request.user
