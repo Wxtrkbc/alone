@@ -12,26 +12,14 @@ from rest_framework.authentication import BasicAuthentication
 from ins.app.serializer import UserSerializer
 from ins.app.filter import UserFilter
 from ins.utils.func import check_body_keys
-from ins.utils.response import error_response, empty_response
+from ins.utils.response import error_response, empty_response, json_response
 
 
 User = get_user_model()
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    """
-    http://127.0.0.1:8000/v1/users/11cb29a3a9a64f11bdfb129e8bd03b55/
-        - Retrieve
-        - Update
-    http://127.0.0.1:8000/v1/users/ List
-        - ordering
-        - search
-        - filter(name=joe)
-    http://127.0.0.1:8000/v1/users/login/
-        - name(name or phone)
-        - password
-    http://127.0.0.1:8000/v1/users/logout/
-    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = PageNumberPagination
@@ -92,3 +80,20 @@ class UserViewSet(viewsets.ModelViewSet):
         target_user = get_object_or_404(User, uuid=data['uuid'])
         User.objects.unfollow_user(user, target_user)
         return empty_response()
+
+    def followers(self, request, uuid):
+        user = get_object_or_404(User, uuid=uuid)
+        followers = user.followers.all()
+        page = self.paginate_queryset(UserSerializer(followers, many=True).data)
+        if page is not None:
+            return self.get_paginated_response(page)
+        return json_response(page)
+
+    def following(self, request, uuid):
+        user = get_object_or_404(User, uuid=uuid)
+        followers = user.followed.all()
+        page = self.paginate_queryset(UserSerializer(followers, many=True).data)
+        if page is not None:
+            return self.get_paginated_response(page)
+        return json_response(page)
+

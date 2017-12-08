@@ -1,5 +1,7 @@
 # coding=utf-8
 
+URL_REGEX = '[A-Za-z0-9-_.]+'
+
 # model file choice
 SEX_MALE = "MALE"
 SEX_FEMALE = 'FEMALE'

@@ -9,8 +9,6 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
 
-    # password = serializers.CharField(write_only=True)
-
     """
     uuid = UUIDField(read_only=True)
     password = CharField(max_length=128)
@@ -28,9 +26,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     """
 
+    followers = serializers.SerializerMethodField()
+    following = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        exclude = ('is_admin', 'followed')
+        exclude = ('is_admin', 'followed', 'updated_at')
 
     def validate_phone(self, value):
         try:
@@ -59,3 +60,10 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+    @staticmethod
+    def get_followers(obj):
+        return obj.followers.count()
+
+    @staticmethod
+    def get_following(obj):
+        return obj.followed.count()
