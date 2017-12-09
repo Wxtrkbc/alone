@@ -54,13 +54,13 @@ class Ins(Time):
     type = models.CharField(max_length=16, choices=const.INS_TYPE, default=const.PICTURE_INS)
     urls = jsonfield.JSONField(default=[])
     owner = models.ForeignKey(User, related_name='post_ins')
-    likes = models.ForeignKey(User, related_name='like_ins', null=True)
+    likes = models.ManyToManyField(User, related_name='like_ins')
     tags = models.ManyToManyField(Tag)
 
 
 class Comment(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.CharField(max_length=512, blank=True, default='')
-    owner = models.ForeignKey(User, related_name='comments')
+    poster = models.ForeignKey(User, related_name='comments')
     ins = models.ForeignKey(Ins, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)

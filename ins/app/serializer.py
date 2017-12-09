@@ -49,6 +49,14 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Email seems not valid")
         return value
 
+    @staticmethod
+    def get_followers(obj):
+        return obj.followers.count()
+
+    @staticmethod
+    def get_following(obj):
+        return obj.followed.count()
+
     def create(self, validated_data):
         # check_body_keys(validated_data, ['name', 'password'])
         name = validated_data.pop('name')
@@ -62,23 +70,22 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    @staticmethod
-    def get_followers(obj):
-        return obj.followers.count()
-
-    @staticmethod
-    def get_following(obj):
-        return obj.followed.count()
-
 
 class InsSerializer(serializers.ModelSerializer):
 
     owner = serializers.PrimaryKeyRelatedField(required=False, queryset=User.objects.all())
+    username = serializers.CharField(source='owner.name')
+    avatar = serializers.CharField(source='owner.avatar')
+    likes = serializers.SerializerMethodField()
     tags = serializers.PrimaryKeyRelatedField(allow_empty=True, required=False,
                                               many=True, queryset=Tag.objects.all())
 
     class Meta:
         model = Ins
+
+    @staticmethod
+    def get_likes(obj):
+        return obj.likes.count()
 
     def create(self, validate_data):
         user = self.context['request'].user
