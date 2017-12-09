@@ -18,6 +18,10 @@ class Time(models.Model):
         abstract = True
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=128)
+
+
 class User(AbstractBaseUser, Time):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=64, unique=True, db_index=True)
@@ -36,9 +40,27 @@ class User(AbstractBaseUser, Time):
 
     objects = AloneUserManager()
 
-    def __str__(self):
+    def __repr__(self):
         return '{} {}'.format(self.name, self.phone)
 
     @property
     def is_staff(self):
         return self.is_admin
+
+
+class Ins(Time):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    brief = models.CharField(max_length=512, blank=True, default='')
+    type = models.CharField(max_length=16, choices=const.INS_TYPE, default=const.PICTURE_INS)
+    urls = jsonfield.JSONField(default=[])
+    owner = models.ForeignKey(User, related_name='post_ins')
+    likes = models.ForeignKey(User, related_name='like_ins')
+    tags = models.ManyToManyField(Tag)
+
+
+class Comment(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    content = models.CharField(max_length=512, blank=True, default='')
+    owner = models.ForeignKey(User, related_name='comments')
+    ins = models.ForeignKey(Ins, related_name='comments')
+    created_at = models.DateTimeField(auto_now_add=True)

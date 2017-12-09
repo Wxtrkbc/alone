@@ -22,3 +22,11 @@ USER_LEVELS = (
     (USER_STAR, 'Star'),
     (USER_SUPERSTAR, 'Superstar'),
 )
+
+PICTURE_INS = "PICTURE-INS"
+VIDEO_INS = "VIDEO-INS"
+
+INS_TYPE = (
+    (PICTURE_INS, 'picture_ins'),
+    (VIDEO_INS, 'video_ins')
+)
