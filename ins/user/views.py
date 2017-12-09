@@ -96,4 +96,3 @@ class UserViewSet(viewsets.ModelViewSet):
         if page is not None:
             return self.get_paginated_response(page)
         return json_response(page)
-

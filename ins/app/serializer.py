@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from validate_email import validate_email
 
+from ins.app.models import Ins, Tag
+
 User = get_user_model()
 
 
@@ -67,3 +69,19 @@ class UserSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_following(obj):
         return obj.followed.count()
+
+
+class InsSerializer(serializers.ModelSerializer):
+
+    owner = serializers.PrimaryKeyRelatedField(required=False, queryset=User.objects.all())
+    tags = serializers.PrimaryKeyRelatedField(allow_empty=True, required=False,
+                                              many=True, queryset=Tag.objects.all())
+
+    class Meta:
+        model = Ins
+
+    def create(self, validate_data):
+        user = self.context['request'].user
+        brief = validate_data.get('brief', '')
+        urls = validate_data.get('urls', [])
+        return Ins.objects.create(brief=brief, urls=urls, owner=user)

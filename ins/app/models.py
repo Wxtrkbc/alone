@@ -54,7 +54,7 @@ class Ins(Time):
     type = models.CharField(max_length=16, choices=const.INS_TYPE, default=const.PICTURE_INS)
     urls = jsonfield.JSONField(default=[])
     owner = models.ForeignKey(User, related_name='post_ins')
-    likes = models.ForeignKey(User, related_name='like_ins')
+    likes = models.ForeignKey(User, related_name='like_ins', null=True)
     tags = models.ManyToManyField(Tag)
 
 
