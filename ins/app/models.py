@@ -19,7 +19,7 @@ class Time(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, db_index=True)
 
 
 class User(AbstractBaseUser, Time):

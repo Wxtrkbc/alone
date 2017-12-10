@@ -4,9 +4,15 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from validate_email import validate_email
 
-from ins.app.models import Ins, Tag
+from ins.app.models import Ins, Tag, Comment
 
 User = get_user_model()
+
+
+class TagSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tag
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -71,14 +77,21 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
-class InsSerializer(serializers.ModelSerializer):
+class UserSimpleSerializer(serializers.RelatedField):
+    def to_representation(self, value):
+        return {
+            'uuid': value.uuid,
+            'name': value.name,
+            'avatar': value.avatar
+        }
 
-    owner = serializers.PrimaryKeyRelatedField(required=False, queryset=User.objects.all())
-    username = serializers.CharField(source='owner.name')
-    avatar = serializers.CharField(source='owner.avatar')
+
+class InsSerializer(serializers.ModelSerializer):
+    owner = UserSimpleSerializer(read_only=True)
     likes = serializers.SerializerMethodField()
-    tags = serializers.PrimaryKeyRelatedField(allow_empty=True, required=False,
-                                              many=True, queryset=Tag.objects.all())
+    comments = serializers.SerializerMethodField()
+    tags = TagSerializer(many=True, required=False)
+    urls = serializers.JSONField(required=False)
 
     class Meta:
         model = Ins
@@ -87,8 +100,26 @@ class InsSerializer(serializers.ModelSerializer):
     def get_likes(obj):
         return obj.likes.count()
 
+    @staticmethod
+    def get_comments(obj):
+        return obj.comments.count()
+
     def create(self, validate_data):
-        user = self.context['request'].user
-        brief = validate_data.get('brief', '')
-        urls = validate_data.get('urls', [])
-        return Ins.objects.create(brief=brief, urls=urls, owner=user)
+        validate_data['owner'] = self.context['request'].user
+        tags = validate_data.pop('tags', None)
+        if tags:
+            ret = []
+            for item in tags:
+                tag, _ = Tag.objects.get_or_create(name=item['name'])
+                ret.append(tag)
+        ins = Ins.objects.create(**validate_data)
+        if ret:
+            ins.tags.add(*ret)
+        return ins
+
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+
