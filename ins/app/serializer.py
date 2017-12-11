@@ -35,12 +35,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     """
 
-    followers = serializers.SerializerMethodField()
-    following = serializers.SerializerMethodField()
+    followers_count = serializers.IntegerField()
+    following_count = serializers.IntegerField()
 
     class Meta:
         model = User
-        exclude = ('is_admin', 'followed', 'updated_at')
+        exclude = ('is_admin', 'followed', 'updated_at', 'password')
 
     def validate_phone(self, value):
         try:
@@ -55,14 +55,6 @@ class UserSerializer(serializers.ModelSerializer):
         if not validate_email(value):
             raise serializers.ValidationError("Email seems not valid")
         return value
-
-    @staticmethod
-    def get_followers(obj):
-        return obj.followers.count()
-
-    @staticmethod
-    def get_following(obj):
-        return obj.followed.count()
 
     def create(self, validated_data):
         # check_body_keys(validated_data, ['name', 'password'])
@@ -89,21 +81,14 @@ class UserSimpleSerializer(serializers.RelatedField):
 
 class InsSerializer(serializers.ModelSerializer):
     owner = UserSimpleSerializer(read_only=True)
-    likes = serializers.SerializerMethodField()
-    comments = serializers.SerializerMethodField()
     tags = TagSerializer(many=True, required=False)
     urls = serializers.JSONField(required=False)
+    comments_count = serializers.IntegerField()
+    likes_count = serializers.IntegerField()
 
     class Meta:
         model = Ins
-
-    @staticmethod
-    def get_likes(obj):
-        return obj.likes.count()
-
-    @staticmethod
-    def get_comments(obj):
-        return obj.comments.count()
+        exclude = ('updated_at', 'likes')
 
     def create(self, validate_data):
         validate_data['owner'] = self.context['request'].user

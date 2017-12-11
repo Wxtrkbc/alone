@@ -1,5 +1,6 @@
 # coding=utf-8
 
+from django.db.models import Count
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
@@ -31,7 +32,13 @@ class UserViewSet(viewsets.ModelViewSet):
     )
 
     search_fields = ('name', 'email')
-    ordering_fields = ('created_at', 'level', 'updated_at')
+    ordering_fields = ('created_at', 'level', 'updated_at',
+                       'following_count', 'followers_count')
+
+    def get_queryset(self):
+        return User.objects.annotate(
+            following_count=Count("followed")).annotate(
+            followers_count=Count('followers')).all()
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)

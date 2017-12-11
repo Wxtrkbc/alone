@@ -1,5 +1,6 @@
 # coding=utf-8
 
+from django.db.models import Count
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
@@ -9,7 +10,7 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from ins.app.serializer import InsSerializer, CommentSerializer
 from ins.app.models import Ins, Comment
-from ins.app.filter import CommentFilter
+from ins.app.filter import InsFilter, CommentFilter
 
 
 User = get_user_model()
@@ -19,16 +20,20 @@ class InsViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
     serializer_class = InsSerializer
     pagination_class = PageNumberPagination
+    filter_class = InsFilter
     filter_backends = (
         filters.DjangoFilterBackend,
         filters.SearchFilter,
         filters.OrderingFilter
     )
+    ordering_fields = ('created_at', 'comments_count', 'likes_count')
 
     def get_queryset(self):
         parent_pk = self.kwargs['parent_lookup_uuid']
         user = get_object_or_404(User, uuid=parent_pk)
-        return Ins.objects.filter(owner=user)
+        return Ins.objects.filter(owner=user).annotate(
+            comments_count=Count("comments")).annotate(
+            likes_count=Count('likes')).all()
 
 
 class CommentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
