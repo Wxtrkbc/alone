@@ -9,6 +9,7 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from ins.app.serializer import InsSerializer, CommentSerializer
 from ins.app.models import Ins, Comment
+from ins.app.filter import CommentFilter
 
 
 User = get_user_model()
@@ -34,11 +35,14 @@ class CommentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
     serializer_class = CommentSerializer
     pagination_class = PageNumberPagination
+    filter_class = CommentFilter
     filter_backends = (
         filters.DjangoFilterBackend,
         filters.SearchFilter,
         filters.OrderingFilter
     )
+
+    ordering_fields = ('created_at', )
 
     def get_queryset(self):
         parent_pk = self.kwargs['parent_lookup_uuid']
