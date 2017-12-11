@@ -1,6 +1,7 @@
 
 import phonenumbers
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from validate_email import validate_email
 
@@ -119,7 +120,15 @@ class InsSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    poster = UserSimpleSerializer(read_only=True)
+    ins = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Comment
 
+    def create(self, validate_data):
+        poster = self.context['request'].user
+        ins_uuid = self.context['request'].parser_context['kwargs']['parent_lookup_uuid']
+        ins = get_object_or_404(Ins, uuid=ins_uuid)
+        content = validate_data.get('content')
+        return Comment.objects.create(ins=ins, poster=poster, content=content)

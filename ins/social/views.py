@@ -7,8 +7,8 @@ from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
-from ins.app.serializer import InsSerializer
-from ins.app.models import Ins
+from ins.app.serializer import InsSerializer, CommentSerializer
+from ins.app.models import Ins, Comment
 
 
 User = get_user_model()
@@ -28,3 +28,19 @@ class InsViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         parent_pk = self.kwargs['parent_lookup_uuid']
         user = get_object_or_404(User, uuid=parent_pk)
         return Ins.objects.filter(owner=user)
+
+
+class CommentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
+
+    serializer_class = CommentSerializer
+    pagination_class = PageNumberPagination
+    filter_backends = (
+        filters.DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter
+    )
+
+    def get_queryset(self):
+        parent_pk = self.kwargs['parent_lookup_uuid']
+        ins = get_object_or_404(Ins, uuid=parent_pk)
+        return Comment.objects.filter(ins=ins)

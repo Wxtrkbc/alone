@@ -47,6 +47,12 @@ class User(AbstractBaseUser, Time):
     def is_staff(self):
         return self.is_admin
 
+    def follow(self, target_user):
+        self.followed.add(target_user)
+
+    def unfollow(self, target_user):
+        self.followed.remove(target_user)
+
 
 class Ins(Time):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

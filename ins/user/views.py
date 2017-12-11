@@ -69,7 +69,7 @@ class UserViewSet(viewsets.ModelViewSet):
         data = request.data
         check_body_keys(data, ['uuid'])
         target_user = get_object_or_404(User, uuid=data['uuid'])
-        User.objects.follow_user(user, target_user)
+        user.follow(target_user)
         return empty_response()
 
     @list_route(methods=['put'])
@@ -78,7 +78,7 @@ class UserViewSet(viewsets.ModelViewSet):
         data = request.data
         check_body_keys(data, ['uuid'])
         target_user = get_object_or_404(User, uuid=data['uuid'])
-        User.objects.unfollow_user(user, target_user)
+        user.unfollow(target_user)
         return empty_response()
 
     def followers(self, request, uuid):
