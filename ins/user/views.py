@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework import status, filters
-from rest_framework.decorators import list_route
+from rest_framework.decorators import list_route, detail_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.authentication import BasicAuthentication
 
@@ -88,16 +88,18 @@ class UserViewSet(viewsets.ModelViewSet):
         user.unfollow(target_user)
         return empty_response()
 
-    def followers(self, request, uuid):
-        user = get_object_or_404(User, uuid=uuid)
+    @detail_route()
+    def followers(self, request, pk):
+        user = get_object_or_404(User, uuid=pk)
         followers = user.followers.all()
         page = self.paginate_queryset(UserSerializer(followers, many=True).data)
         if page is not None:
             return self.get_paginated_response(page)
         return json_response(page)
 
-    def following(self, request, uuid):
-        user = get_object_or_404(User, uuid=uuid)
+    @detail_route()
+    def following(self, request, pk):
+        user = get_object_or_404(User, uuid=pk)
         followers = user.followed.all()
         page = self.paginate_queryset(UserSerializer(followers, many=True).data)
         if page is not None:
