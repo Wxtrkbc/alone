@@ -63,6 +63,12 @@ class Ins(Time):
     likes = models.ManyToManyField(User, related_name='like_ins')
     tags = models.ManyToManyField(Tag)
 
+    def like_by(self, user):
+        self.likes.add(user)
+
+    def unlike_by(self, user):
+        self.likes.remove(user)
+
 
 class Comment(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

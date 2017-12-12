@@ -83,8 +83,8 @@ class InsSerializer(serializers.ModelSerializer):
     owner = UserSimpleSerializer(read_only=True)
     tags = TagSerializer(many=True, required=False)
     urls = serializers.JSONField(required=False)
-    comments_count = serializers.IntegerField()
-    likes_count = serializers.IntegerField()
+    comments_count = serializers.IntegerField(required=False)
+    likes_count = serializers.IntegerField(required=False)
 
     class Meta:
         model = Ins
