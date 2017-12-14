@@ -50,7 +50,7 @@ class UserViewSet(viewsets.ModelViewSet):
         user = authenticate(**data)
         if user is not None:
             login(request, user)
-            return empty_response()
+            return json_response(UserSerializer(user).data)
         else:
             return error_response('Login failed!', status=status.HTTP_401_UNAUTHORIZED)
 
