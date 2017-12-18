@@ -40,7 +40,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ('is_admin', 'followed', 'updated_at', 'password')
+        exclude = ('is_admin', 'followed', 'updated_at')
 
     def validate_phone(self, value):
         try:

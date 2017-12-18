@@ -10,7 +10,7 @@ class AloneBackend(object):
         try:
             user = User.objects.get(Q(name=name)|Q(phone=name))
         except User.DoesNotExist:
-            User().set_password(password)
+            return None
         if user.check_password(password):
             return user
         return None
