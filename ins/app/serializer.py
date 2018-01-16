@@ -93,8 +93,8 @@ class InsSerializer(serializers.ModelSerializer):
     def create(self, validate_data):
         validate_data['owner'] = self.context['request'].user
         tags = validate_data.pop('tags', None)
+        ret = []
         if tags:
-            ret = []
             for item in tags:
                 tag, _ = Tag.objects.get_or_create(name=item['name'])
                 ret.append(tag)
