@@ -51,7 +51,8 @@ class InsViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = request.user
-        ins = Ins.objects.filter(owner__followers=user).order_by('-created_at')
+        ins = Ins.objects.filter(owner__followers=user).annotate(
+            likes_count=Count('likes')).order_by('-created_at')
         page = self.paginate_queryset(InsSerializer(ins, many=True).data)
         if page is not None:
             return self.get_paginated_response(page)

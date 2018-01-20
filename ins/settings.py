@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'ins.app',
 
     # Third packages
-    'rest_framework_docs',
+    # 'rest_framework_docs',
     'corsheaders'
     # 'raven.contrib.django.raven_compat',
 
@@ -97,7 +97,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('DB_NAME', 'alone'),
         'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'wxtrkbc'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'wxtrkbcxx'),
         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
         'PORT': os.getenv('DB_PORT', 3306)
     }
@@ -153,6 +153,10 @@ AUTH_USER_MODEL = 'app.User'
 AUTHENTICATION_BACKENDS = [
     'ins.user.auth.AloneBackend'
 ]
+
+
+# CSRF_COOKIE_DOMAIN = '.alone.com'
+# SESSION_COOKIE_DOMAIN = '.alone.com'
 
 # RAVEN_CONFIG = {
 #     'dsn': 'http://61bd9e6b02d143629f25402dc1a19b65:2349b2f8856f4cd4b0b71fad4173e540@localhost:9000/2',

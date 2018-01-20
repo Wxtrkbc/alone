@@ -1,6 +1,17 @@
 version: '3'
 
 services:
+  mysql:
+    restart: always
+    image: mysql:latest
+#    user: "1000:50"
+    ports:
+      - "3306:3306"
+    env_file:
+      - ./env/mysql.env
+    volumes:
+      - /Users/ahprosim/Desktop/data:/data/
+
   web:
     build: .
     command: sh run.sh
@@ -12,27 +23,20 @@ services:
 #        restart_policy:
 #          condition: on-failure
     ports:
-      - "9000"
+      - "9000:9000"
     env_file:
-     - ./env/web.env
+      - ./env/web.env
+    depends_on:
+      - mysql
 
 
-#  mysql:
+
+
+
+#  redis:
 #    restart: always
-#    image: mysql:latest
-#    user: "1000:50"
+#    image: redis:latest
 #    ports:
-#      - "3306:3306"
-#    env_file:
-#     - ./env/mysql.env
+#      - "6379:6379"
 #    volumes:
-#      - /Users/ahprosim/Desktop/data:/data/
-
-
-  redis:
-    restart: always
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    volumes:
-      - /Users/ahprosim/Desktop/storage/redis-1:/data
+#      - /Users/ahprosim/Desktop/storage/redis-1:/data

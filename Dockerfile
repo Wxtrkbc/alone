@@ -6,8 +6,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     python3-dev \
     python3-pip \
     supervisor \
-    nginx \
-    sqlite3 && \
+    nginx && \
 	pip3 install -U pip setuptools &&  rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install supervisor-stdout

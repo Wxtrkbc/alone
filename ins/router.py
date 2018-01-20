@@ -5,7 +5,7 @@ from rest_framework_extensions.routers import ExtendedDefaultRouter
 from ins.user.views import UserViewSet
 from ins.social.views import InsViewSet, CommentViewSet
 
-router = ExtendedDefaultRouter(trailing_slash=True)
+router = ExtendedDefaultRouter(trailing_slash=False)
 (
     router.register(r'users', UserViewSet, base_name='users')
           .register(r'ins', InsViewSet, base_name='ins',
