@@ -24,5 +24,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^ping/?$', ping()),
     url(r'^' + settings.API_VERSION + '/', include('ins.router')),
-    url(r'^docs/', include('rest_framework_docs.urls')),
+    # url(r'^docs/', include('rest_framework_docs.urls')),
 ]

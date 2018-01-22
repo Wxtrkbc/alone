@@ -1,20 +1,21 @@
-version: '3'
+version: '3.3'
 
 services:
-  mysql:
+  db:
     restart: always
-    image: mysql:latest
-#    user: "1000:50"
+    image: postgres:latest
+    container_name: alone_db
     ports:
-      - "3306:3306"
-    env_file:
-      - ./env/mysql.env
+      - "5432:5432"
     volumes:
-      - /Users/ahprosim/Desktop/data:/data/
+      - type: volume
+        source: dbdata
+        target: /pg_data
 
   web:
     build: .
     command: sh run.sh
+    container_name: alone_web
 #    deploy:
 #      replicas:2
 #      resources:
@@ -27,16 +28,7 @@ services:
     env_file:
       - ./env/web.env
     depends_on:
-      - mysql
+      - db
 
-
-
-
-
-#  redis:
-#    restart: always
-#    image: redis:latest
-#    ports:
-#      - "6379:6379"
-#    volumes:
-#      - /Users/ahprosim/Desktop/storage/redis-1:/data
+volumes:
+  dbdata:

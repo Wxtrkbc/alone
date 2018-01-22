@@ -1,0 +1,7 @@
+.git*
+Dockerfile
+docker-compose.yml
+.idea/
+.DS_Store
+env/
+docs/
