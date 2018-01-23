@@ -2,6 +2,9 @@ version: '3.3'
 
 services:
   db:
+    labels:
+      com.example.service: "database"
+      com.example.description: "Database for web service"
     restart: always
     image: postgres:latest
     container_name: alone_db
@@ -9,11 +12,66 @@ services:
       - "5432:5432"
     volumes:
       - type: volume
-        source: dbdata
+        source: db_data
         target: /pg_data
 
+  es:
+    labels:
+      com.example.service: "elasticsearch"
+      com.example.description: "For searching and indexing data"
+    image: elasticsearch:latest
+    container_name: alone_es
+    restart: on-failure
+    environment:
+      ES_JAVA_OPTS: "-Xms750m -Xmx750m"
+    volumes:
+      - type: volume
+        source: es_data
+        target: /usr/share/elasticsearch/data/
+    ports:
+      - "9200:9200"
+
+  logstash:
+    labels:
+      com.example.service: "logstash"
+      com.example.description: "For logger"
+    image: logstash:latest
+    container_name: alone_logstash
+    command: logstash -f /etc/logstash.conf
+    volumes:
+      - type: volume
+        source: logstash_data
+        target: /usr/share/elasticsearch/data/
+
+      - type: bind
+        source: ./conf/logstash.conf
+        target: /etc/logstash.conf
+    ports:
+      - "5959:5959"
+    depends_on:
+      - es
+
+  kibana:
+    labels:
+      com.example.service: "kibana"
+      com.example.description: "Data visualisation and for log aggregation"
+    image: kibana:latest
+    container_name: alone_kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_URL=http://es:9200
+    depends_on:
+      - es
+
+
   web:
-    build: .
+    labels:
+      com.example.service: "web"
+      com.example.description: "Use for the main web process"
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: sh run.sh
     container_name: alone_web
 #    deploy:
@@ -29,6 +87,13 @@ services:
       - ./env/web.env
     depends_on:
       - db
+      - es
+      - logstash
+      - kibana
+    logging:
+      driver: "json-file"
 
 volumes:
-  dbdata:
+  db_data:
+  es_data:
+  logstash_data:

@@ -1,4 +1,6 @@
-# -*- coding: utf-8 -*-
+import logging
+
+LOG = logging.getLogger(__name__)
 
 
 def ping(saying='Hold the door!'):
@@ -10,5 +12,6 @@ def ping(saying='Hold the door!'):
     Usage:
         url(r^ping/?$', ping())
     """
+    LOG.error('Something went wrong! Test Kibana')
     from django.http import HttpResponse
     return lambda request: HttpResponse(saying + "\n")

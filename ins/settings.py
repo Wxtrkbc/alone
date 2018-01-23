@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import raven
+from ins.utils.log import get_log_config
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -44,7 +45,8 @@ INSTALLED_APPS = [
 
     # Third packages
     # 'rest_framework_docs',
-    'corsheaders'
+    'corsheaders',
+    'django_elasticsearch_dsl'
     # 'raven.contrib.django.raven_compat',
 
 ]
@@ -172,4 +174,18 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 5,
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+}
+
+LOG_PATH = os.getenv('LOG_PATH', '/tmp/log/alone/')
+LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG')
+LOG_HANDLER = os.getenv('LOG_HANDLER', 'debug,error,info,color').split(',')
+
+LOGGING = get_log_config('alone', LOG_HANDLER, LOG_LEVEL, LOG_PATH)
+
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': '{}:{}'.format(os.getenv('ELASTICSEARCH_HOST', 'localhost'),
+                                os.getenv('ELASTICSEARCH_HOST_PORT', 9200))
+    },
 }

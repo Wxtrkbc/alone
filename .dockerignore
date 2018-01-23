@@ -5,3 +5,4 @@ docker-compose.yml
 .DS_Store
 env/
 docs/
+db.sqlite3
