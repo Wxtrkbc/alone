@@ -65,10 +65,10 @@ def get_log_config(component, handlers, level='DEBUG', path='/var/log/alone/'):
         'version': 1,
         'disable_existing_loggers': False,
         'formatters': {
-            # 'standard': {
-            #     'format': '%(asctime)s [%(levelname)s][%(threadName)s]' +
-            #               '[%(name)s.%(funcName)s():%(lineno)d] %(message)s'
-            # },
+            'color': {
+                'format': '%(asctime)s [%(levelname)s][%(threadName)s]' +
+                          '[%(name)s.%(funcName)s():%(lineno)d] %(message)s'
+            },
             'standard': {
                 '()': 'ins.utils.log.SplitColoredFormatter',
                 'format': "%(asctime)s " +
@@ -86,14 +86,14 @@ def get_log_config(component, handlers, level='DEBUG', path='/var/log/alone/'):
                 'backupCount': 5,
                 'formatter': 'standard',
             },
-            # 'color': {
-            #     'level': 'DEBUG',
-            #     'class': 'logging.handlers.RotatingFileHandler',
-            #     'filename': path + component + '.color.log',
-            #     'maxBytes': 1024 * 1024 * 1024,
-            #     'backupCount': 5,
-            #     'formatter': 'color',
-            # },
+            'color': {
+                'level': 'DEBUG',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': path + component + '.color.log',
+                'maxBytes': 1024 * 1024 * 1024,
+                'backupCount': 5,
+                'formatter': 'color',
+            },
             'info': {
                 'level': 'INFO',
                 'class': 'logging.handlers.RotatingFileHandler',
