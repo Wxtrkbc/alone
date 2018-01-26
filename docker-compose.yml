@@ -82,7 +82,7 @@ services:
 #        restart_policy:
 #          condition: on-failure
     ports:
-      - "9000:9000"
+      - "9090:9090"
     env_file:
       - ./env/web.env
     depends_on:

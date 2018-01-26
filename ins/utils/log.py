@@ -125,6 +125,12 @@ def get_log_config(component, handlers, level='DEBUG', path='/var/log/alone/'):
                 'fqdn': False,
                 'tags': ['django.request'],  # list of tags. Default: None.
             },
+            # 'sentry': {
+            #     'level': 'WARNING',
+            #     'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+            #     'formatter': 'standard',
+            # },
+
         },
         'loggers': {
             'django': {
@@ -142,6 +148,16 @@ def get_log_config(component, handlers, level='DEBUG', path='/var/log/alone/'):
                 'level': level,
                 'propagate': False
             },
+            # 'raven': {
+            #     'level': 'DEBUG',
+            #     'handlers': ['sentry'],
+            #     'propagate': False,
+            # },
+            # 'sentry.errors': {
+            #     'level': 'DEBUG',
+            #     'handlers': ['sentry'],
+            #     'propagate': False,
+            # },
         }
     }
     return config

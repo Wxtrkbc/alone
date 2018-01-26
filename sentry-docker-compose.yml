@@ -1,0 +1,72 @@
+version: '3.3'
+
+services:
+
+  redis:
+    image: redis:latest
+    container_name: sentry_redis
+
+  postgres:
+    restart: always
+    image: postgres:latest
+    container_name: sentry_postgres
+    environment:
+      POSTGRES_USER: sentry
+      POSTGRES_PASSWORD: sentry
+      POSTGRES_DBNAME: sentry
+      POSTGRES_DBUSER: sentry
+      POSTGRES_DBPASS: sentry
+    volumes:
+      - type: volume
+        source: sentry_data
+        target: /pg_sentry_data
+
+  sentry:
+    image: sentry:latest
+    ports:
+     - 9000:9000
+    container_name: sentry
+#    command: "sentry upgrade"
+    environment:
+      SENTRY_SECRET_KEY: 'dhvo(fg-22dw0__f!b*8hru0akyxslzlf(d2tk^dgi!v0rtu)k'
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_DB_USER: sentry
+      SENTRY_DB_PASSWORD: sentry
+      SENTRY_REDIS_HOST: redis
+    depends_on:
+      - postgres
+      - redis
+
+  cron:
+    image: sentry:latest
+    command: "sentry run cron"
+    container_name: sentry_cron
+    environment:
+      SENTRY_SECRET_KEY: 'dhvo(fg-22dw0__f!b*8hru0akyxslzlf(d2tk^dgi!v0rtu)k'
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_DB_USER: sentry
+      SENTRY_DB_PASSWORD: sentry
+      SENTRY_REDIS_HOST: redis
+    depends_on:
+      - postgres
+      - redis
+
+  worker:
+    image: sentry:latest
+    container_name: sentry_worker
+    command: "sentry run worker"
+    environment:
+      SENTRY_SECRET_KEY: 'dhvo(fg-22dw0__f!b*8hru0akyxslzlf(d2tk^dgi!v0rtu)k'
+      SENTRY_POSTGRES_HOST: postgres
+      SENTRY_DB_USER: sentry
+      SENTRY_DB_PASSWORD: sentry
+      SENTRY_REDIS_HOST: redis
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  sentry_data:
+
+
+

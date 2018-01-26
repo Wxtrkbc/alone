@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     # Third packages
     # 'rest_framework_docs',
     'corsheaders',
-    'django_elasticsearch_dsl'
+    'django_elasticsearch_dsl',
     # 'raven.contrib.django.raven_compat',
 
 ]
@@ -156,14 +156,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-# CSRF_COOKIE_DOMAIN = '.alone.com'
-# SESSION_COOKIE_DOMAIN = '.alone.com'
-
 # RAVEN_CONFIG = {
-#     'dsn': 'http://61bd9e6b02d143629f25402dc1a19b65:2349b2f8856f4cd4b0b71fad4173e540@localhost:9000/2',
-#     # If you are using git, you can also automatically configure the
-#     # release based on the git info.
-#     'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+    # 'dsn': 'http://f1ba75af70cf41fd8629c276a68148bb:18b4afdcb7f64afb901fcd6a066632c5@127.0.0.1:9000/2',
+#     # 'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
 # }
 
 REST_FRAMEWORK = {
