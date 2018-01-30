@@ -52,12 +52,12 @@ class InsDocument(DocType):
 
 
 # test
-def search(name):
-    from elasticsearch import Elasticsearch
-    from elasticsearch_dsl import Search
-    client = Elasticsearch()
-    my_search = Search(using=client)
-    query = my_search.query("match", name=name)
-    response = query.execute()
-    return response
+# def search(name):
+#     from elasticsearch import Elasticsearch
+#     from elasticsearch_dsl import Search
+#     client = Elasticsearch()
+#     my_search = Search(using=client)
+#     query = my_search.query("match", name=name)
+#     response = query.execute()
+#     return response
 
