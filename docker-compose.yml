@@ -1,10 +1,21 @@
 version: '3.3'
 
 services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./dockers/Dockerfile-nginx
+    container_name: nginx
+    restart: on-failure
+    ports:
+      - "9090:80"
+    volumes:
+      - type: volume
+        source: web_data
+        target: /web_data
+
+
   db:
-    labels:
-      com.example.service: "database"
-      com.example.description: "Database for web service"
     restart: always
     image: postgres:latest
     container_name: alone_db
@@ -16,9 +27,6 @@ services:
         target: /pg_data
 
   es:
-    labels:
-      com.example.service: "elasticsearch"
-      com.example.description: "For searching and indexing data"
     image: elasticsearch:latest
     container_name: alone_es
     restart: on-failure
@@ -32,9 +40,6 @@ services:
       - "9200:9200"
 
   logstash:
-    labels:
-      com.example.service: "logstash"
-      com.example.description: "For logger"
     image: logstash:latest
     container_name: alone_logstash
     command: logstash -f /etc/logstash.conf
@@ -52,9 +57,6 @@ services:
       - es
 
   kibana:
-    labels:
-      com.example.service: "kibana"
-      com.example.description: "Data visualisation and for log aggregation"
     image: kibana:latest
     container_name: alone_kibana
     ports:
@@ -66,14 +68,12 @@ services:
 
 
   web:
-    labels:
-      com.example.service: "web"
-      com.example.description: "Use for the main web process"
     build:
       context: .
-      dockerfile: Dockerfile
-    command: sh run.sh
+      dockerfile: ./dockers/Dockerfile-web
+    command: sh ./dockers/run.sh
     container_name: alone_web
+    restart: always
 #    deploy:
 #      replicas:2
 #      resources:
@@ -81,8 +81,8 @@ services:
 #        memory: 50M
 #        restart_policy:
 #          condition: on-failure
-    ports:
-      - "9000:9000"
+#    ports:
+#      - "9000:9000"
     env_file:
       - ./env/web.env
     depends_on:
@@ -90,10 +90,16 @@ services:
       - es
       - logstash
       - kibana
+      - nginx
     logging:
       driver: "json-file"
+    volumes:
+      - type: volume
+        source: web_data
+        target: /web_data
 
 volumes:
   db_data:
   es_data:
   logstash_data:
+  web_data:
