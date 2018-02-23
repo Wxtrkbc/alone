@@ -79,12 +79,28 @@ class UserSimpleSerializer(serializers.RelatedField):
         }
 
 
+class CommentSerializer(serializers.ModelSerializer):
+    poster = UserSimpleSerializer(read_only=True)
+    ins = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = Comment
+
+    def create(self, validate_data):
+        poster = self.context['request'].user
+        ins_uuid = self.context['request'].parser_context['kwargs']['parent_lookup_uuid']
+        ins = get_object_or_404(Ins, uuid=ins_uuid)
+        content = validate_data.get('content')
+        return Comment.objects.create(ins=ins, poster=poster, content=content)
+
+
 class InsSerializer(serializers.ModelSerializer):
     owner = UserSimpleSerializer(read_only=True)
     tags = TagSerializer(many=True, required=False)
     urls = serializers.JSONField(required=False)
     comments_count = serializers.IntegerField(required=False)
     likes_count = serializers.IntegerField(required=False)
+    comments = CommentSerializer(many=True)
 
     class Meta:
         model = Ins
@@ -102,18 +118,3 @@ class InsSerializer(serializers.ModelSerializer):
         if ret:
             ins.tags.add(*ret)
         return ins
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    poster = UserSimpleSerializer(read_only=True)
-    ins = serializers.PrimaryKeyRelatedField(read_only=True)
-
-    class Meta:
-        model = Comment
-
-    def create(self, validate_data):
-        poster = self.context['request'].user
-        ins_uuid = self.context['request'].parser_context['kwargs']['parent_lookup_uuid']
-        ins = get_object_or_404(Ins, uuid=ins_uuid)
-        content = validate_data.get('content')
-        return Comment.objects.create(ins=ins, poster=poster, content=content)

@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     # 'rest_framework_docs',
     'corsheaders',
     'django_elasticsearch_dsl',
-    # 'raven.contrib.django.raven_compat',
+    'raven.contrib.django.raven_compat',
 
 ]
 
@@ -156,10 +156,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-# RAVEN_CONFIG = {
-    # 'dsn': 'http://f1ba75af70cf41fd8629c276a68148bb:18b4afdcb7f64afb901fcd6a066632c5@127.0.0.1:9000/2',
-#     # 'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
-# }
+RAVEN_CONFIG = {
+    'dsn': 'http://625a75bfb1164a269d44e555efa46c5f:430a10e003f1447baee5d75a0c55c793@172.18.0.6/2',
+    # 'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
