@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     # 'rest_framework_docs',
     'corsheaders',
     'django_elasticsearch_dsl',
-    'raven.contrib.django.raven_compat',
+    # 'raven.contrib.django.raven_compat',
 
 ]
 
@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'ins.wsgi.application'
 #     }
 # }
 
-# mysql
+# postgresql
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -156,10 +156,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-RAVEN_CONFIG = {
-    'dsn': 'http://625a75bfb1164a269d44e555efa46c5f:430a10e003f1447baee5d75a0c55c793@172.18.0.6/2',
-    # 'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
-}
+# RAVEN_CONFIG = {
+#     'dsn': 'http://625a75bfb1164a269d44e555efa46c5f:430a10e003f1447baee5d75a0c55c793@172.18.0.6/2',
+#     # 'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

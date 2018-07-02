@@ -14,14 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-from django.contrib import admin
 from django.conf import settings
 
 from ins.utils.web import ping
 
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
     url(r'^ping/?$', ping()),
     url(r'^' + settings.API_VERSION + '/', include('ins.router')),
     # url(r'^docs/', include('rest_framework_docs.urls')),
