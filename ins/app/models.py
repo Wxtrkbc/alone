@@ -31,9 +31,9 @@ class User(AbstractBaseUser, Time):
     location = jsonfield.JSONField(blank=True, default={})
     sex = models.CharField(max_length=12, choices=const.SEX_TYPES, default=const.SEX_UNDEFINED)
     brief = models.CharField(max_length=512, blank=True, default='')
-    level = models.CharField(max_length=12, choices=const.USER_LEVELS, default=const.USER_NORMAL)
     followed = models.ManyToManyField('self', related_name='followers', symmetrical=False)
-    is_admin = models.BooleanField(default=False)
+    is_private = models.BooleanField(default=False)
+    is_certificate = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'name'
     REQUIRED_FIELDS = []
@@ -62,6 +62,8 @@ class Ins(Time):
     owner = models.ForeignKey(User, related_name='post_ins')
     likes = models.ManyToManyField(User, related_name='like_ins')
     tags = models.ManyToManyField(Tag)
+    enable_comment = models.BooleanField(default=True)
+
 
     def like_by(self, user):
         self.likes.add(user)
