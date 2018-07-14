@@ -5,7 +5,6 @@ Django base settings for ins project.
 
 import os
 
-
 from ins.utils.log import get_log_config
 
 
@@ -19,6 +18,7 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    'rest_framework',
     'corsheaders'
 ]
 
@@ -89,5 +89,3 @@ LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG')
 LOG_HANDLER = os.getenv('LOG_HANDLER', 'debug,error,info,color').split(',')
 
 LOGGING = get_log_config('alone', LOG_HANDLER, LOG_LEVEL, LOG_PATH)
-
-

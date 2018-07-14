@@ -22,5 +22,4 @@ from ins.utils.web import ping
 urlpatterns = [
     url(r'^ping/?$', ping()),
     url(r'^' + settings.API_VERSION + '/', include('ins.router')),
-    # url(r'^docs/', include('rest_framework_docs.urls')),
 ]
