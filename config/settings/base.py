@@ -37,6 +37,9 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # log 404 events to the Sentry server.
+    'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware'
 ]
 
 ROOT_URLCONF = 'config.urls'
