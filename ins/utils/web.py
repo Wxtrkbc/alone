@@ -13,11 +13,13 @@ def ping(saying='Hold the door!'):
         url(r^ping/?$', ping())
     """
 
-    from raven.contrib.django.raven_compat.models import client
-    try:
-        1 / 0
-    except ZeroDivisionError:
-        client.captureException()
+    # from raven.contrib.django.raven_compat.models import client
+    # try:
+    #     1 / 0
+    # except ZeroDivisionError:
+    #     client.captureException()
+    from ins.app.tasks import send_email
+    send_email('text', 'melodywangdong@foxmail.com', ['melodywangdong@gmail.com'], 'hello')
 
     LOG.error('Something went wrong! Test Kibana')
     from django.http import HttpResponse

@@ -42,9 +42,9 @@ MIDDLEWARE = [
     'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware'
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = 'ins.urls'
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = 'ins.wsgi.application'
 
 
 AUTH_PASSWORD_VALIDATORS = [
