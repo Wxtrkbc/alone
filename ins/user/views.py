@@ -1,4 +1,5 @@
 # coding=utf-8
+import logging
 
 from django.db.models import Count
 from django.contrib.auth import get_user_model
@@ -15,8 +16,8 @@ from ins.app.filter import UserFilter
 from ins.utils.func import check_body_keys
 from ins.utils.response import error_response, empty_response, json_response
 
-
 User = get_user_model()
+LOG = logging.getLogger(__name__)
 
 
 class UserViewSet(viewsets.ModelViewSet):

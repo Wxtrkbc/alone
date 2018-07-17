@@ -117,7 +117,7 @@ def get_log_config(component, handlers, level='DEBUG', path='/var/log/alone/'):
             },
             'logstash': {
                 'level': 'DEBUG',
-                'class': 'logstash.LogstashHandler',
+                'class': 'logstash.TCPLogstashHandler',
                 'host': os.getenv('LOGSTASH_HOST', 'localhost'),
                 'port': os.getenv('LOGSTASH_HOST_PORT', 5959),
                 'version': 1,

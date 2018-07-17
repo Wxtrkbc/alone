@@ -61,9 +61,8 @@ class Ins(Time):
     urls = jsonfield.JSONField(default=[])
     owner = models.ForeignKey(User, related_name='post_ins')
     likes = models.ManyToManyField(User, related_name='like_ins')
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, related_name='ins')
     enable_comment = models.BooleanField(default=True)
-
 
     def like_by(self, user):
         self.likes.add(user)

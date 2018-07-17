@@ -1,0 +1,52 @@
+version: '3.3'
+
+services:
+  es:
+    image: elasticsearch:latest
+    container_name: alone_es
+    restart: on-failure
+    environment:
+      ES_JAVA_OPTS: "-Xms750m -Xmx750m"
+    volumes:
+      - type: volume
+        source: es_data
+        target: /usr/share/elasticsearch/data/
+    ports:
+      - "9200:9200"
+
+  logstash:
+    image: logstash:latest
+    container_name: alone_logstash
+    command: logstash -f /etc/logstash.conf
+    volumes:
+      - type: volume
+        source: logstash_data
+        target: /usr/share/elasticsearch/data/
+
+      - type: bind
+        source: ../../config/logstash.conf
+        target: /etc/logstash.conf
+    ports:
+      - "5959:5959"
+    depends_on:
+      - es
+
+  kibana:
+    image: kibana:latest
+    container_name: alone_kibana
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_URL=http://es:9200
+    depends_on:
+      - es
+      - logstash
+
+networks:
+  default:
+    external:
+      name: alone_network
+
+volumes:
+  es_data:
+  logstash_data:
