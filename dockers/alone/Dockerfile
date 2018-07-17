@@ -17,4 +17,4 @@ COPY . /alone
 WORKDIR /alone
 
 RUN pip3 install -r requirements.txt
-RUN chmod a+x ./dockers/alone/run.sh
+RUN chmod a+x ./dockers/alone/run.sh && chmod a+x ./dockers/celery/*

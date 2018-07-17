@@ -1,0 +1,88 @@
+version: '3.3'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./dockers/nginx/Dockerfile
+    image: alone_nginx:wd
+    container_name: alone_nginx
+    restart: on-failure
+    ports:
+      - "9090:80"
+    volumes:
+      - type: volume
+        source: web_data
+        target: /web_data
+      - type: bind
+        source: ../../WebstormProjects/alone/dist
+        target: /usr/share/nginx/html
+
+  db:
+    restart: always
+    image: postgres:latest
+    container_name: alone_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - type: volume
+        source: db_data
+        target: /pg_data
+
+  redis:
+    image: redis:latest
+    container_name: alone_redis
+    ports:
+      - "6379:6379"
+
+
+  web: &django
+    build:
+      context: .
+      dockerfile: ./dockers/alone/Dockerfile
+    image: alone_web:wd
+    command: sh ./dockers/alone/run.sh
+    container_name: alone_web
+    restart: always
+    env_file:
+      - ./env/local/web.env
+    depends_on:
+      - db
+      - nginx
+    logging:
+      driver: "json-file"
+    volumes:
+      - type: volume
+        source: web_data
+        target: /web_data
+
+
+  celerworker:
+    <<: *django
+    image: alone_celeryworker:wd
+    container_name: alone_celeryworker
+    depends_on:
+      - redis
+      - db
+    ports: []
+    command: sh ./dockers/celery/start_celeryworker.sh
+
+  celerbeat:
+    <<: *django
+    image: alone_celerybeat:wd
+    container_name: alone_celerybeat
+    depends_on:
+      - redis
+      - db
+    ports: []
+    command: sh ./dockers/celery/start_celerybeat.sh
+
+# docker network create alone_network if could not be found
+networks:
+  default:
+    external:
+      name: alone_network
+
+volumes:
+  db_data:
+  web_data:
