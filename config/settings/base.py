@@ -39,7 +39,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # log 404 events to the Sentry server.
-    'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware'
+    'raven.contrib.django.raven_compat.middleware.Sentry404CatchMiddleware',
+
+    # alone exception
+    'ins.middleware.AloneExceptionMiddleware'
 ]
 
 ROOT_URLCONF = 'ins.urls'

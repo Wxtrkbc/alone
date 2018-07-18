@@ -6,6 +6,8 @@ from rest_framework import serializers
 from validate_email import validate_email
 
 from ins.app.models import Ins, Tag, Comment
+from ins.utils.exception import AloneException
+from ins.utils import errors
 
 User = get_user_model()
 
@@ -23,24 +25,31 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ('followed', 'updated_at', 'password')
+        exclude = ('followed', 'updated_at')
+
+    def to_representation(self, obj):
+        rep = super(UserSerializer, self).to_representation(obj)
+        rep.pop('password', None)
+        return rep
 
     def validate_phone(self, value):
-        try:
-            res = phonenumbers.parse(value)
-            if not phonenumbers.is_valid_number(res):
-                raise serializers.ValidationError("Phone number seems not valid")
-        except Exception as e:
+        res = phonenumbers.parse(value)
+        if not phonenumbers.is_valid_number(res):
             raise serializers.ValidationError("Phone number seems not valid")
+        if User.objects.filter(phone=value):
+            raise AloneException(code=errors.ERR_PHONE_ALREADY_REGISTERED,
+                                 message="The phone has been registered")
         return value
 
     def validate_email(self, value):
         if not validate_email(value):
             raise serializers.ValidationError("Email seems not valid")
+        if User.objects.filter(email=value):
+            raise AloneException(code=errors.ERR_EMAIL_ALREADY_REGISTERED,
+                                 message="The email has been registered")
         return value
 
     def create(self, validated_data):
-        # check_body_keys(validated_data, ['name', 'password'])
         name = validated_data.pop('name')
         password = validated_data.pop('password')
         return User.objects.create_user(username=name, password=password, **validated_data)

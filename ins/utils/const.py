@@ -2,7 +2,7 @@
 
 URL_REGEX = '[A-Za-z0-9-_.]+'
 
-# model file choice
+# model const
 SEX_MALE = "MALE"
 SEX_FEMALE = 'FEMALE'
 SEX_UNDEFINED = "UNDEFINED"
