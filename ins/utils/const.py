@@ -13,20 +13,23 @@ SEX_TYPES = (
     (SEX_UNDEFINED, 'Undefined')
 )
 
-USER_NORMAL = "NORMAL"
-USER_STAR = "STAR"
-USER_SUPERSTAR = "Superstar"
 
-USER_LEVELS = (
-    (USER_NORMAL, 'Normal'),
-    (USER_STAR, 'Star'),
-    (USER_SUPERSTAR, 'Superstar'),
-)
-
-PICTURE_INS = "PICTURE-INS"
-VIDEO_INS = "VIDEO-INS"
+INS_TYPE_PICTURE = "PICTURE"
+INS_TYPE_VIDEO = "VIDEO"
 
 INS_TYPE = (
-    (PICTURE_INS, 'picture_ins'),
-    (VIDEO_INS, 'video_ins')
+    (INS_TYPE_PICTURE, 'Picture'),
+    (INS_TYPE_VIDEO, 'Video')
+)
+
+NOTIFY_LIKES = 'LIKE'
+NOTIFY_COMMENT = 'COMMENT'
+NOTIFY_FOLLOW = 'FOLLOW'
+NOTIFY_BROADCAST = 'BROADCAST'
+
+NOTIFY_TYPE = (
+    (NOTIFY_LIKES, 'Like'),
+    (NOTIFY_COMMENT, 'Comment'),
+    (NOTIFY_FOLLOW, 'Follow'),
+    (NOTIFY_BROADCAST, 'Broadcast')
 )

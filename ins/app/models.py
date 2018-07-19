@@ -29,9 +29,11 @@ class User(AbstractBaseUser, Time):
     phone = models.CharField(max_length=16, db_index=True, blank=True, default='')
     avatar = models.CharField(max_length=256, blank=True, default='')
     location = jsonfield.JSONField(blank=True, default={})
-    sex = models.CharField(max_length=12, choices=const.SEX_TYPES, default=const.SEX_UNDEFINED)
+    sex = models.CharField(max_length=12, choices=const.SEX_TYPES,
+                           default=const.SEX_UNDEFINED)
     brief = models.CharField(max_length=512, blank=True, default='')
-    followed = models.ManyToManyField('self', related_name='followers', symmetrical=False)
+    followed = models.ManyToManyField('self', related_name='followers',
+                                      symmetrical=False)
     is_private = models.BooleanField(default=False)
     is_certificate = models.BooleanField(default=False)
 
@@ -57,7 +59,8 @@ class User(AbstractBaseUser, Time):
 class Ins(Time):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     brief = models.CharField(max_length=512, blank=True, default='')
-    type = models.CharField(max_length=16, choices=const.INS_TYPE, default=const.PICTURE_INS)
+    type = models.CharField(max_length=16, choices=const.INS_TYPE,
+                            default=const.PICTURE_INS)
     urls = jsonfield.JSONField(default=[])
     owner = models.ForeignKey(User, related_name='post_ins')
     likes = models.ManyToManyField(User, related_name='like_ins')
@@ -77,3 +80,15 @@ class Comment(models.Model):
     poster = models.ForeignKey(User, related_name='comments')
     ins = models.ForeignKey(Ins, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Notification(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    type = models.CharField(max_length=16, choices=const.NOTIFY_TYPE,
+                            default=const.NOTIFY_LIKES)
+    sender = models.ForeignKey(User)
+    target = models.ForeignKey(User, related_name='notifies')
+    ins = models.ForeignKey(Ins, null=True)
+    comment = models.ForeignKey(Comment)
+    is_read = models.BooleanField(default=False)
+    extra = models.CharField(max_length=1024, blank=True, default='')
