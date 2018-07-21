@@ -87,7 +87,7 @@ class InsSerializer(serializers.ModelSerializer):
     urls = serializers.JSONField(required=False)
     comments_count = serializers.IntegerField(required=False)
     likes_count = serializers.IntegerField(required=False)
-    comments = CommentSerializer(many=True)
+    comments = CommentSerializer(many=True, required=False)
 
     class Meta:
         model = Ins
