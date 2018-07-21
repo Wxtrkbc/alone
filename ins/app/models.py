@@ -60,7 +60,7 @@ class Ins(Time):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     brief = models.CharField(max_length=512, blank=True, default='')
     type = models.CharField(max_length=16, choices=const.INS_TYPE,
-                            default=const.PICTURE_INS)
+                            default=const.INS_TYPE_PICTURE)
     urls = jsonfield.JSONField(default=[])
     owner = models.ForeignKey(User, related_name='post_ins')
     likes = models.ManyToManyField(User, related_name='like_ins')
@@ -89,6 +89,6 @@ class Notification(models.Model):
     sender = models.ForeignKey(User)
     target = models.ForeignKey(User, related_name='notifies')
     ins = models.ForeignKey(Ins, null=True)
-    comment = models.ForeignKey(Comment)
+    comment = models.ForeignKey(Comment, null=True)
     is_read = models.BooleanField(default=False)
     extra = models.CharField(max_length=1024, blank=True, default='')

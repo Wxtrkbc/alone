@@ -9,8 +9,7 @@ from rest_framework import viewsets
 from rest_framework import status, filters
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.authentication import BasicAuthentication
-
+from rest_framework.permissions import AllowAny
 from ins.app.serializer import UserSerializer
 from ins.app.filter import UserFilter
 from ins.utils.func import check_body_keys
@@ -44,7 +43,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
-    @list_route(methods=['post'], authentication_classes=[BasicAuthentication])
+    @list_route(methods=['post'], permission_classes=[AllowAny])
     def login(self, request):
         data = request.data
         check_body_keys(data, ['name', 'password'])
@@ -54,6 +53,15 @@ class UserViewSet(viewsets.ModelViewSet):
             return json_response(UserSerializer(user).data)
         else:
             return error_response('Login failed!', status=status.HTTP_401_UNAUTHORIZED)
+
+    @list_route(methods=['post'], permission_classes=[AllowAny])
+    def register(self, request):
+        data = request.data
+        check_body_keys(data, ['name', 'password'])
+        name = data.pop('name')
+        password = data.pop('password')
+        user = User.objects.create_user(username=name, password=password, **data)
+        return json_response(UserSerializer(user).data)
 
     @list_route(methods=['delete'])
     def logout(self, request):

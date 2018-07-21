@@ -49,11 +49,6 @@ class UserSerializer(serializers.ModelSerializer):
                                  message="The email has been registered")
         return value
 
-    def create(self, validated_data):
-        name = validated_data.pop('name')
-        password = validated_data.pop('password')
-        return User.objects.create_user(username=name, password=password, **validated_data)
-
     def update(self, instance, validated_data):
         for key in ['location', 'avatar', 'location', 'sex', 'brief', 'email', 'phone']:
             if key in validated_data:
