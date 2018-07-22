@@ -13,6 +13,7 @@ from ins.app.serializer import InsSerializer, CommentSerializer
 from ins.app.models import Ins, Comment
 from ins.app.filter import InsFilter, CommentFilter
 from ins.utils.response import json_response
+from ins.app.tasks import create_notify
 
 
 User = get_user_model()
@@ -41,6 +42,7 @@ class InsViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     def like(self, request, pk=None):
         ins = get_object_or_404(Ins, uuid=pk)
         ins.like_by(request.user)
+        create_notify(sender=request.user, target=ins.owner, ins=ins)
         return json_response(InsSerializer(ins).data)
 
     @detail_route(methods=['put'])
