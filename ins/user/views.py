@@ -10,8 +10,9 @@ from rest_framework import status, filters
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
-from ins.app.serializer import UserSerializer
-from ins.app.filter import UserFilter
+from ins.app.models import Notification
+from ins.app.serializer import UserSerializer, NotifySerializer
+from ins.app.filter import UserFilter, NotifyFilter
 from ins.utils.func import check_body_keys
 from ins.utils.response import error_response, empty_response, json_response
 
@@ -111,6 +112,23 @@ class UserViewSet(viewsets.ModelViewSet):
         user = get_object_or_404(User, uuid=pk)
         followers = user.followed.all()
         page = self.paginate_queryset(UserSerializer(followers, many=True).data)
+        if page is not None:
+            return self.get_paginated_response(page)
+        return json_response(page)
+
+
+class NotifyViewSet(viewsets.ModelViewSet):
+    serializer_class = NotifySerializer
+    queryset = Notification.objects.all()
+    filter_class = NotifyFilter
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        notifies = self.filter_queryset(self.get_queryset()).filter(target=user)
+        page = self.paginate_queryset(NotifySerializer(notifies, many=True).data)
         if page is not None:
             return self.get_paginated_response(page)
         return json_response(page)

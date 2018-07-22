@@ -1,7 +1,7 @@
 import django_filters
 from django.contrib.auth import get_user_model
 
-from ins.app.models import Ins, Comment
+from ins.app.models import Ins, Comment, Notification
 
 User = get_user_model()
 
@@ -35,4 +35,11 @@ class CommentFilter(CreateAtFilter):
     class Meta:
         model = Comment
         fields = ['created_at_gte', 'created_at_lte']
+
+
+class NotifyFilter(CreateAtFilter):
+
+    class Meta:
+        model = Notification
+        fields = ['is_read', 'created_at_gte', 'created_at_lte']
 

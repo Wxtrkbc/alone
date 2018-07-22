@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from validate_email import validate_email
 
-from ins.app.models import Ins, Tag, Comment
+from ins.app.models import Ins, Tag, Comment, Notification
 from ins.utils.exception import AloneException
 from ins.utils import errors
 
@@ -105,3 +105,20 @@ class InsSerializer(serializers.ModelSerializer):
         if ret:
             ins.tags.add(*ret)
         return ins
+
+
+class InsSimpleSerializer(serializers.RelatedField):
+    def to_representation(self, value):
+        return {
+            'uuid': value.uuid,
+            'urls': value.urls
+        }
+
+
+class NotifySerializer(serializers.ModelSerializer):
+
+    sender = UserSimpleSerializer(read_only=True)
+    ins = InsSimpleSerializer(read_only=True)
+
+    class Meta:
+        model = Notification

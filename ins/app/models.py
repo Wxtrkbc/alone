@@ -45,6 +45,9 @@ class User(AbstractBaseUser, Time):
     def __repr__(self):
         return '{} {}'.format(self.name, self.phone)
 
+    class Meta:
+        ordering = ['-created_at']
+
     @property
     def is_staff(self):
         return self.is_admin
@@ -67,6 +70,9 @@ class Ins(Time):
     tags = models.ManyToManyField(Tag, related_name='ins')
     enable_comment = models.BooleanField(default=True)
 
+    class Meta:
+        ordering = ['-created_at']
+
     def like_by(self, user):
         self.likes.add(user)
 
@@ -81,6 +87,9 @@ class Comment(models.Model):
     ins = models.ForeignKey(Ins, related_name='comments')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-created_at']
+
 
 class Notification(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -92,3 +101,7 @@ class Notification(models.Model):
     comment = models.ForeignKey(Comment, null=True)
     is_read = models.BooleanField(default=False)
     extra = models.CharField(max_length=1024, blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
