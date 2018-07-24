@@ -5,14 +5,15 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework import filters
+from rest_framework.decorators import api_view
 from rest_framework.decorators import detail_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from ins.app.serializer import InsSerializer, CommentSerializer
-from ins.app.models import Ins, Comment
+from ins.app.models import Ins, Comment, Tag
 from ins.app.filter import InsFilter, CommentFilter
-from ins.utils.response import json_response
+from ins.utils.response import json_response, empty_response
 from ins.app.tasks import create_notify
 
 
@@ -78,3 +79,16 @@ class CommentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         parent_pk = self.kwargs['parent_lookup_uuid']
         ins = get_object_or_404(Ins, uuid=parent_pk)
         return Comment.objects.filter(ins=ins)
+
+
+@api_view(['GET'])
+def list_ins_from_tag(request, pk):
+    tags = Tag.objects.filter(pk=pk)
+    if not tags:
+        return empty_response()
+    ins = Ins.objects.filter(tags=tags.first())
+    pagination = PageNumberPagination()
+    page = pagination.paginate_queryset(InsSerializer(ins, many=True).data, request)
+    if page is not None:
+        return pagination.get_paginated_response(page)
+    return json_response(page)

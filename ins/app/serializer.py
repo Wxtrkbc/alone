@@ -12,10 +12,28 @@ from ins.utils import errors
 User = get_user_model()
 
 
+class UserSimpleSerializer(serializers.RelatedField):
+    def to_representation(self, value):
+        return {
+            'uuid': value.uuid,
+            'name': value.name,
+            'avatar': value.avatar
+        }
+
+
+class InsSimpleSerializer(serializers.RelatedField):
+    def to_representation(self, value):
+        return {
+            'uuid': value.uuid,
+            'urls': value.urls
+        }
+
+
 class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
+        # exclude = ('id', )
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -55,15 +73,6 @@ class UserSerializer(serializers.ModelSerializer):
                 setattr(instance, key, validated_data[key])
         instance.save()
         return instance
-
-
-class UserSimpleSerializer(serializers.RelatedField):
-    def to_representation(self, value):
-        return {
-            'uuid': value.uuid,
-            'name': value.name,
-            'avatar': value.avatar
-        }
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -107,14 +116,6 @@ class InsSerializer(serializers.ModelSerializer):
         return ins
 
 
-class InsSimpleSerializer(serializers.RelatedField):
-    def to_representation(self, value):
-        return {
-            'uuid': value.uuid,
-            'urls': value.urls
-        }
-
-
 class NotifySerializer(serializers.ModelSerializer):
 
     sender = UserSimpleSerializer(read_only=True)
@@ -122,3 +123,4 @@ class NotifySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Notification
+

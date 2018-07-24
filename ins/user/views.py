@@ -10,6 +10,7 @@ from rest_framework import status, filters
 from rest_framework.decorators import list_route, detail_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
+
 from ins.app.models import Notification
 from ins.app.serializer import UserSerializer, NotifySerializer
 from ins.app.filter import UserFilter, NotifyFilter
