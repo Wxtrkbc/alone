@@ -14,3 +14,4 @@ colorlog==3.0.1
 elasticsearch-dsl==5.4.0
 python-logstash==0.4.6
 celery==4.2.0
+pika==0.12.0

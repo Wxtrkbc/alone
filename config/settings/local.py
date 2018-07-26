@@ -83,3 +83,8 @@ EMAIL_FROM = os.getenv('EMAIL_FROM', 'melodywangdong@foxmail.com')
 EMAIL_USE_TLS = True
 
 
+MQ_USERNAME = os.getenv('MQ_USERNAME', 'guest')
+MQ_PASSWORD = os.getenv('MQ_USERNAME', 'guest')
+MQ_HOST = os.getenv('MQ_HOST', 'localhost')
+MQ_VIRTUAL_HOST = os.getenv('MQ_VIRTUAL_HOST', '/')
+MQ_PORT = os.getenv('MQ_PORT', )
