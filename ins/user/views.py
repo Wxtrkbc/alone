@@ -17,6 +17,7 @@ from ins.app.filter import UserFilter, NotifyFilter
 from ins.utils.func import check_body_keys
 from ins.utils.response import error_response, empty_response, json_response
 
+
 User = get_user_model()
 LOG = logging.getLogger(__name__)
 
