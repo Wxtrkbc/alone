@@ -107,3 +107,5 @@ LOG_PATH = os.getenv('LOG_PATH', '/tmp/log/alone/')
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'DEBUG')
 LOG_HANDLER = os.getenv('LOG_HANDLER', 'debug,error,info,color').split(',')
 LOGGING = get_log_config('alone', LOG_HANDLER, LOG_LEVEL, LOG_PATH)
+
+APPEND_SLASH = False

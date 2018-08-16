@@ -5,6 +5,7 @@ from django.db.models import Count
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import get_object_or_404
+
 from rest_framework import viewsets
 from rest_framework import status, filters
 from rest_framework.decorators import list_route, detail_route
@@ -64,6 +65,8 @@ class UserViewSet(viewsets.ModelViewSet):
         name = data.pop('name')
         password = data.pop('password')
         user = User.objects.create_user(username=name, password=password, **data)
+        if user is not None:
+            login(request, user)
         return json_response(UserSerializer(user).data)
 
     @list_route(methods=['delete'])

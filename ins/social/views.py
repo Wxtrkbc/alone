@@ -33,11 +33,12 @@ class InsViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     ordering_fields = ('created_at', 'comments_count', 'likes_count')
 
     def get_queryset(self):
-        parent_pk = self.kwargs['parent_lookup_uuid']
-        user = get_object_or_404(User, uuid=parent_pk)
-        return Ins.objects.filter(owner=user).annotate(
-            comments_count=Count("comments")).annotate(
-            likes_count=Count('likes')).all()
+        return Ins.objects.all()
+        # parent_pk = self.kwargs['parent_lookup_uuid']
+        # user = get_object_or_404(User, uuid=parent_pk)
+        # return Ins.objects.filter(owner=user).annotate(
+        #     comments_count=Count("comments")).annotate(
+        #     likes_count=Count('likes')).all()
 
     @detail_route(methods=['put'])
     def like(self, request, pk=None):
@@ -53,8 +54,9 @@ class InsViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         return json_response(InsSerializer(ins).data)
 
     def list(self, request, *args, **kwargs):
-        user = request.user
-        ins = Ins.objects.filter(owner=user).annotate(
+        user_uuid = self.kwargs['parent_lookup_uuid'] if 'parent_lookup_uuid' \
+                    in self.kwargs else request.user.uuid
+        ins = Ins.objects.filter(owner__uuid=user_uuid).annotate(
             likes_count=Count('likes')).order_by('-created_at')
         page = self.paginate_queryset(InsSerializer(ins, many=True).data)
         if page is not None:

@@ -21,6 +21,6 @@ def ping(saying='Hold the door!'):
     # from ins.app.tasks import send_email
     # send_email('text', 'melodywangdong@foxmail.com', ['melodywangdong@gmail.com'], 'hello')
 
-    LOG.error('Something went wrong! Test Kibana')
+    # LOG.error('Something went wrong! Test Kibana')
     from django.http import HttpResponse
     return lambda request: HttpResponse(saying + "\n")
