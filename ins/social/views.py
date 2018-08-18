@@ -1,20 +1,25 @@
 # coding=utf-8
+import json
 
 from django.db.models import Count
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework import filters
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.decorators import detail_route
 from rest_framework.pagination import PageNumberPagination
 from rest_framework_extensions.mixins import NestedViewSetMixin
+from rest_framework.permissions import IsAuthenticated
+
 
 from ins.app.serializer import InsSerializer, CommentSerializer
 from ins.app.models import Ins, Comment, Tag
 from ins.app.filter import InsFilter, CommentFilter
 from ins.utils.response import json_response, empty_response
 from ins.app.tasks import create_notify
+from ins.utils.sts import Sts
 
 
 User = get_user_model()
@@ -94,3 +99,15 @@ def list_ins_from_tag(request, pk):
     if page is not None:
         return pagination.get_paginated_response(page)
     return json_response(page)
+
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def get_temp_cos_token(request):
+    cos_config = {
+        'secret_id': settings.COS_SECRET_ID,
+        'secret_key': settings.COS_SECRET_KEY,
+    }
+    sts = Sts(cos_config)
+    rep = sts.get_credential().content
+    return json_response(json.loads(rep)['data']['credentials'])

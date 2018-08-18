@@ -109,3 +109,6 @@ LOG_HANDLER = os.getenv('LOG_HANDLER', 'debug,error,info,color').split(',')
 LOGGING = get_log_config('alone', LOG_HANDLER, LOG_LEVEL, LOG_PATH)
 
 APPEND_SLASH = False
+
+COS_SECRET_ID = os.getenv('COS_SECRET_ID')
+COS_SECRET_KEY = os.getenv('COS_SECRET_KEY')

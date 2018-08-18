@@ -97,10 +97,3 @@ class Tools(object):
     def flat_params(key_values):
         key_values = sorted(key_values.items(), key=lambda d: d[0])
         return reduce(Tools._link_key_values, map(Tools._flat_key_values, key_values))
-
-
-
-# sts = Sts(raw_config)
-# response = sts.get_credential()
-# json_content = response.content
-# print(json_content)

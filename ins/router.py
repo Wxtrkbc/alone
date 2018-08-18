@@ -4,7 +4,7 @@ from rest_framework_extensions.routers import ExtendedDefaultRouter
 
 from ins.user.views import UserViewSet, NotifyViewSet
 from ins.social.views import InsViewSet, CommentViewSet
-from ins.social.views import list_ins_from_tag
+from ins.social.views import list_ins_from_tag, get_temp_cos_token
 
 router = ExtendedDefaultRouter(trailing_slash=True)
 (
@@ -25,6 +25,7 @@ router = ExtendedDefaultRouter(trailing_slash=True)
 
 custom_url = [
     url(r'^tags/(?P<pk>[0-9]+)/ins$', list_ins_from_tag),
+    url(r'^temp_cos_token$', get_temp_cos_token),
 ]
 
 urlpatterns = router.urls + custom_url
