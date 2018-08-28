@@ -7,6 +7,8 @@ User = get_user_model()
 class AloneBackend(object):
 
     def authenticate(self, name=None, password=None):
+        if not name:
+            return None
         try:
             user = User.objects.get(Q(name=name)|Q(phone=name))
         except User.DoesNotExist:

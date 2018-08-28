@@ -13,7 +13,6 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework_extensions.mixins import NestedViewSetMixin
 from rest_framework.permissions import IsAuthenticated
 
-
 from ins.app.serializer import InsSerializer, CommentSerializer
 from ins.app.models import Ins, Comment, Tag
 from ins.app.filter import InsFilter, CommentFilter
@@ -110,4 +109,9 @@ def get_temp_cos_token(request):
     }
     sts = Sts(cos_config)
     rep = sts.get_credential().content
-    return json_response(json.loads(rep)['data']['credentials'])
+    # data = {"credentials": {
+    #     "sessionToken": "52641ddf39911142050f416afb3eaef962635be130001",
+    #     "tmpSecretId": "AKIDWFPouj0aS0NUdWEOv5qljJwXMEg8NVHS",
+    #     "tmpSecretKey": "RE3kEr8OvWY34pg1d1HPOExR1iOnheE4"},
+    #         "expiredTime": 1534562396}
+    return json_response(json.loads(rep)['data'])

@@ -33,3 +33,4 @@ NOTIFY_TYPE = (
     (NOTIFY_FOLLOW, 'Follow'),
     (NOTIFY_BROADCAST, 'Broadcast')
 )
+

@@ -47,6 +47,25 @@ class UserViewSet(viewsets.ModelViewSet):
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
 
+    def retrieve(self, request, *args, **kwargs):
+        current_user = request.user
+        is_current_user = True if str(current_user.uuid) == kwargs['pk'] else False
+        if is_current_user:
+            user = current_user
+            relation = None
+
+        else:
+            user = get_object_or_404(User, uuid=kwargs['pk'])
+            if current_user in user.followers.all():
+                relation = 'following'
+            if user in current_user.followers.all():
+                relation = 'followed'
+            setattr(user, 'followers_count', user.followers.count())
+            setattr(user, 'following_count', user.followed.count())
+        setattr(user, 'relation', relation)
+        setattr(user, 'post_count', user.post_ins.count())
+        return json_response(UserSerializer(user).data)
+
     @list_route(methods=['post'], permission_classes=[AllowAny])
     def login(self, request):
         data = request.data

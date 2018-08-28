@@ -40,6 +40,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     followers_count = serializers.IntegerField(required=False)
     following_count = serializers.IntegerField(required=False)
+    post_count = serializers.IntegerField(required=False)
+    relation = serializers.CharField(required=False)
 
     class Meta:
         model = User

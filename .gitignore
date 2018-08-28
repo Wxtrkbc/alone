@@ -1,4 +1,5 @@
 .idea/
+*.swp
 *.pyc
 *.sqlite3
 env/
