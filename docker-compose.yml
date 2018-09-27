@@ -4,7 +4,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: ./dockers/Dockerfile-nginx
+      dockerfile: ./dockers/nginx/Dockerfile
     container_name: nginx
     restart: on-failure
     ports:
@@ -17,7 +17,6 @@ services:
         source: ../../WebstormProjects/alone/dist
         target: /usr/share/nginx/html
 
-
   db:
     restart: always
     image: postgres:latest
@@ -29,12 +28,32 @@ services:
         source: db_data
         target: /pg_data
 
+  redis:
+    image: redis:latest
+    container_name: alone_redis
+    ports:
+      - "6379:6379"
+
+  logspout:
+    image: amouat/logspout-logstash
+    container_name: alone_logspout
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /tmp/docker.sock
+    ports:
+      - "8000:80"
+    depends_on:
+      - logstash
+    command: logstash://logstash:5959
+
   es:
     image: elasticsearch:latest
     container_name: alone_es
     restart: on-failure
     environment:
       ES_JAVA_OPTS: "-Xms750m -Xmx750m"
+      LOGSPOUT: ignore
     volumes:
       - type: volume
         source: es_data
@@ -45,6 +64,8 @@ services:
   logstash:
     image: logstash:latest
     container_name: alone_logstash
+    environment:
+     LOGSPOUT: ignore
     command: logstash -f /etc/logstash.conf
     volumes:
       - type: volume
@@ -52,7 +73,7 @@ services:
         target: /usr/share/elasticsearch/data/
 
       - type: bind
-        source: ./conf/logstash.conf
+        source: ./config/logstash.conf
         target: /etc/logstash.conf
     ports:
       - "5959:5959"
@@ -65,16 +86,18 @@ services:
     ports:
       - "5601:5601"
     environment:
-      - ELASTICSEARCH_URL=http://es:9200
+      ELASTICSEARCH_URL: http://es:9200
+      LOGSPOUT: ignore
     depends_on:
       - es
 
 
-  web:
+  web: &django
     build:
       context: .
-      dockerfile: ./dockers/Dockerfile-web
-    command: sh ./dockers/run.sh
+      dockerfile: ./dockers/alone/Dockerfile
+    image: alone_web:wd
+    command: sh ./dockers/alone/run.sh
     container_name: alone_web
     restart: always
 #    deploy:
@@ -100,6 +123,27 @@ services:
       - type: volume
         source: web_data
         target: /web_data
+
+  celerworker:
+    <<: *django
+    image: alone_celeryworker:wd
+    container_name: alone_celeryworker
+    depends_on:
+      - redis
+      - db
+    ports: []
+    command: sh ./dockers/celery/start_celeryworker.sh
+
+  celerbeat:
+    <<: *django
+    image: alone_celerybeat:wd
+    container_name: alone_celerybeat
+    depends_on:
+      - redis
+      - db
+    ports: []
+    command: sh ./dockers/celery/start_celerybeat.sh
+
 
 volumes:
   db_data:
