@@ -23,44 +23,52 @@
 ### 项目目录
 ```
 ├── .dockerignore
+├── .git
 ├── .gitignore
-├── .gitlab-ci.yml（后续会继续结合docker完成gitlab CI 这一块）
+├── .gitlab-ci.yml
 ├── README.md
-├── bin（脚本文件目录）
+├── bin
 │   └── example.sql
-├── conf（配置文件目录）
+├── config
+│   ├── __init__.py
 │   ├── logstash.conf
-│   ├── nginx.conf
-│   ├── supervisord.conf
-│   ├── uwsgi.ini
-│   └── uwsgi_params
-├── docker-compose.yml（整个项目启动文件）
-├── dockers（dockerfile和一些其他服务启动文件）
-│   ├── Dockerfile-nginx
-│   ├── Dockerfile-web
-│   ├── Dockerfile.back
-│   ├── run.sh
-│   └── sentry-docker-compose.yml
-├── docs（文档目录）
+│   └── settings
+│       ├── __init__.py
+│       ├── base.py
+│       ├── local.py
+│       └── production.py
+├── docker-compose.yml
+├── dockers
+│   ├── alone
+│   ├── celery
+│   ├── elk
+│   ├── nginx
+│   └── sentry
+├── docs
 │   ├── gitlab.md
 │   └── sentry_deploy.md
-├── env（环境变量目录）
-│   └── web.env
-├── ins（django项目入口）
+├── env
+│   └── local
+├── ins(Django项目)
 │   ├── __init__.py
-│   ├── app（数据模型、序列化、filter、全文搜索文档定义等目录，）
-│   ├── router.py（Django REST framework 自动路由嵌套路由定义处）
-│   ├── settings.py
-│   ├── social（项目的业务一块的viewset目录）
+│   ├── app  （数据模型、序列化、filter、权限，）
+│   ├── celery.py
+│   ├── middleware.py
+│   ├── router.py
+│   ├── social （社交服务）
+│   ├── static
 │   ├── urls.py
-│   ├── user（项目用户一块viewset目录）
-│   ├── utils（常用的函数工具目录）
-│   ├── wsgi.py
+│   ├── user （用户服务）
+│   ├── utils
+│   └── wsgi.py
+├── local.yml
 ├── manage.py
-├── requirements（依赖文件目录）
+├── requirements
 │   ├── base.txt
 │   ├── prod.txt
-│   └── test.txt		
+│   └── test.txt
+└── requirements.txt
+
 ```
 
 ### 后端效果图
@@ -72,9 +80,3 @@
 - sentry 服务的Dashboard
 
   ![sentry](https://github.com/Wxtrkbc/alone-django/blob/master/ins/static/screenshorts/sentry.png)
-
-- ELK 
-
-  ![kibana](https://github.com/Wxtrkbc/alone-django/blob/master/ins/static/screenshorts/kibana.png)
-
-  ![elasticsearch](https://github.com/Wxtrkbc/alone-django/blob/master/ins/static/screenshorts/elasticsearch.png)
